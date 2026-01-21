@@ -1,0 +1,181 @@
+# CodeForge-Quantum Training Configuration
+
+# Model Configuration
+model_name: "Qwen/Qwen-72B"
+num_layers: 80
+num_heads: 64
+hidden_dim: 8192
+vocab_size: 65536
+max_seq_length: 8192
+dropout: 0.1
+
+# LoRA Configuration
+lora_r_min: 64
+lora_r_max: 128
+lora_alpha: 32
+lora_dropout: 0.05
+
+# Generation Parameters
+beam_width: 5
+length_penalty: 0.6
+coverage_penalty: 0.4
+temperature: 0.8
+
+# Loss Weights (Multi-objective)
+weight_ce: 1.0
+weight_ast: 0.3
+weight_sem: 0.25
+weight_trace: 0.2
+weight_complex: 0.1
+adaptation_rate: 0.01
+
+# Training Parameters
+batch_size: 8
+gradient_accumulation_steps: 4
+learning_rate: 2.0e-5
+weight_decay: 0.01
+gradient_clip: 1.0
+warmup_steps: 1000
+num_epochs: 15
+max_steps: -1  # -1 for no limit
+
+# Optimizer Settings
+optimizer: "AdamW"
+adam_beta1: 0.9
+adam_beta2: 0.999
+adam_epsilon: 1.0e-8
+
+# RAG Parameters
+retrieval_top_k: 10
+contrastive_temperature: 0.07
+similarity_beta: 0.3
+vector_db_path: "data/code_database"
+vector_db_dimension: 768
+faiss_index_type: "HNSW"
+hnsw_m: 32
+hnsw_ef_construction: 200
+hnsw_ef_search: 100
+
+# Execution-aware Parameters
+max_execution_time: 5  # seconds
+max_memory_usage: 512  # MB
+execution_timeout: 5
+num_test_cases: 100
+
+# Data Paths
+train_data_path: "data/train.json"
+val_data_path: "data/val.json"
+test_data_path: "data/test.json"
+code_database_path: "data/code_snippets.json"
+
+# Output Paths
+output_dir: "outputs"
+checkpoint_dir: "checkpoints"
+log_dir: "logs"
+cache_dir: "cache"
+
+# Hardware Configuration
+device: "cuda"
+num_gpus: 8
+fp16: true
+bf16: false
+gradient_checkpointing: true
+checkpoint_every_n_layers: 4
+mixed_precision: "fp16"
+
+# Distributed Training
+distributed_training: true
+local_rank: -1
+world_size: -1
+backend: "nccl"
+
+# Evaluation Settings
+eval_steps: 500
+save_steps: 1000
+logging_steps: 10
+eval_accumulation_steps: 4
+metric_for_best_model: "pass_at_1"
+greater_is_better: true
+load_best_model_at_end: true
+
+# Curriculum Learning
+use_curriculum: true
+curriculum_warmup_epochs: 3
+curriculum_difficulty_levels: ["easy", "medium", "hard"]
+
+# Data Augmentation
+use_augmentation: true
+augmentation_prob: 0.5
+augmentation_techniques:
+  - "rename_variables"
+  - "reorder_statements"
+  - "add_comments"
+  - "extract_constants"
+  - "add_type_hints"
+
+# Focal Sampling
+use_focal_sampling: true
+focal_gamma: 2.0
+
+# Chain-of-Thought
+max_reasoning_steps: 8
+cot_temperature: 0.8
+reasoning_layers: 3
+
+# Monitoring
+use_wandb: true
+wandb_project: "codeforge-quantum"
+wandb_entity: null
+wandb_run_name: null
+use_tensorboard: true
+tensorboard_dir: "logs/tensorboard"
+
+# Seed for reproducibility
+seed: 42
+
+# Early Stopping
+early_stopping_patience: 3
+early_stopping_threshold: 0.001
+
+# Memory Management
+max_memory_gb: 145  # Before gradient checkpointing
+target_memory_gb: 42  # After gradient checkpointing
+
+# Experiment Settings
+experiment_name: "codeforge_quantum_full"
+experiment_description: "Full training of CodeForge-Quantum with all components"
+tags: ["qwen-72b", "lora", "rag", "cot", "execution-aware"]
+
+# Model Comparison Baselines
+compare_with_baselines: true
+baseline_models:
+  - "gpt-4"
+  - "gpt-4-turbo"
+  - "codellama-70b"
+  - "starcoder2"
+  - "deepseek-33b"
+  - "qwen-72b-base"
+
+# Advanced Features
+use_abstract_interpreter: true
+use_trace_analyzer: true
+use_compiler_feedback: true
+use_hierarchical_decoding: true
+use_semantic_preservation: true
+use_ast_alignment: true
+
+# Debug Settings
+debug_mode: false
+verbose: true
+log_level: "INFO"
+profile_memory: false
+detect_anomaly: false
+
+# Dataset Statistics (from paper)
+num_training_samples: 100000  # Estimated
+num_validation_samples: 10000
+num_test_samples: 100  # 100 programming challenges
+difficulty_distribution:
+  easy: 0.33
+  medium: 0.34
+  hard: 0.33
